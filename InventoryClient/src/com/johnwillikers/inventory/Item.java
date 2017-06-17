@@ -8,12 +8,14 @@ public class Item {
 	public String id;
 	public String name;
 	public String desc;
+	public String paidDate;
 	public int paidPrice;
 	
-	public Item(String id, String name, String desc, int paidPrice){
+	public Item(String id, String name, String desc, String paidDate ,int paidPrice){
 		this.id = id;
 		this.name = name;
 		this.desc = desc;
+		this.paidDate = paidDate;
 		this.paidPrice = paidPrice;
 	}
 	
@@ -29,15 +31,19 @@ public class Item {
 		return this.desc;
 	}
 	
+	public String getPaidDate(){
+		return this.paidDate;
+	}
+	
 	public int getPaid(){
 		return this.paidPrice;
 	}
 	
 	public void saveItem(){
-		Out.saveItem(id, name, desc, paidPrice, Core.saveItemCode);
+		Out.saveItem(id, name, desc, paidDate, Core.saveItemCodeString, paidPrice, Core.saveItemCode);
 	}
 	
-	public void destroy(){
-		this.destroy();
+	public void destroy() throws Throwable{
+		this.finalize();
 	}
 }

@@ -2,7 +2,10 @@ package com.johnwillikers;
 
 import java.io.File;
 
-import com.johnwillikers.inventory.Item;
+import javax.swing.SwingUtilities;
+
+import com.johnwillikers.gui.UserInterface;
+import com.johnwillikers.io.In;
 
 public class Core {
 	
@@ -24,22 +27,37 @@ public class Core {
 	 * Reference to: com.johnwillikers.io.Out().saveItem()
 	 */
 	public static int saveItemCode = 20000000;
+	public static String saveItemCodeString = "00/00/0000";
 	
 	//File System variables
-	public static File inventoryDir = new File("./Inventory/");
-	public static File itemsDir = new File(inventoryDir + "Items/");
-	public static File soldItemsDir = new File(inventoryDir + "Sold_Items/");
+	public static String inventoryDir ="./Inventory/";
+	public static String itemsDir = inventoryDir + "Items/";
+	public static String soldItemsDir = inventoryDir + "Sold_Items/";
+	public static String settingsDir = "./Settings/";
+	public static File settingsFile = new File(settingsDir + "settings.json");
+	public static File itemsFile = new File(inventoryDir + "Items_Registry.json");
+	public static File soldItemsFile = new File(inventoryDir + "Sold_Items_Registry.json");
 	
 	public static void firstLaunch(){
-		if(!itemsDir.exists())
-			itemsDir.mkdirs();
-		if(!soldItemsDir.exists())
-			soldItemsDir.mkdirs();
-		Item computer = new Item("CVC0001", "Computer", "High Tech Computer. Prtetty nice.", 2500);
-		computer.saveItem();
+		File items = new File(itemsDir);
+		File soldItems = new File(soldItemsDir);
+		File settings = new File(settingsDir);
+		if(!items.exists())
+			items.mkdirs();
+		if(!soldItems.exists())
+			soldItems.mkdirs();
+		if(!settings.exists())
+			settings.mkdirs();
 	}
 	
 	public static void main(String[] args){
 		firstLaunch();
+		In.setSettings();
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run(){
+				new UserInterface();
+			}
+		});
 	}
 }
