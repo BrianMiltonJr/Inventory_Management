@@ -10,13 +10,15 @@ public class Item {
 	public String desc;
 	public String paidDate;
 	public int paidPrice;
+	public int price;
 	
-	public Item(String id, String name, String desc, String paidDate ,int paidPrice){
+	public Item(String id, String name, String desc, String paidDate ,int paidPrice, int price){
 		this.id = id;
 		this.name = name;
 		this.desc = desc;
 		this.paidDate = paidDate;
 		this.paidPrice = paidPrice;
+		this.price = price;
 	}
 	
 	public String getId(){
@@ -40,7 +42,7 @@ public class Item {
 	}
 	
 	public void saveItem(){
-		Out.saveItem(id, name, desc, paidDate, Core.saveItemCodeString, paidPrice, Core.saveItemCode);
+		Out.saveItem(id, name, desc, paidDate, Core.saveItemCodeString, paidPrice, price);
 	}
 	
 	public void destroy() throws Throwable{

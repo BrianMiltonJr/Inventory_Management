@@ -3,6 +3,8 @@ package com.johnwillikers.io;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +23,38 @@ public class Out {
 		pr.close();
 	}
 	
+	public static boolean appendItemsFile(String id){
+		if(!Core.itemsFile.exists()){
+			JSONArray items = new JSONArray().put(id);
+			JSONObject itemsFile = new JSONObject().put("Items", items);
+			try {
+				print(Core.itemsFile, itemsFile.toString());
+				return true;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			}
+		}else{
+			try {
+				JSONObject itemsFile = In.readItem(Core.itemsFile);
+				JSONArray items = itemsFile.getJSONArray("Items");
+				items.put(id);
+				itemsFile.put("Items", items);
+				print(Core.itemsFile, itemsFile.toString());
+				return true;
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			}
+		}
+	}
+	
 	/*
 	 * This function is in charge of saving both Items and SoldItems. It checks to see if soldPrice == Core.saveItemCode
 	 * if it is it will save the information as an Item and anything else as a SoldItem. I.e use Core.saveItemCode if you
@@ -33,8 +67,17 @@ public class Out {
 			if(save.exists())
 				save.delete();
 			try{
-				JSONObject item = new JSONObject().put("id", id).put("name", name).put("desc", desc).put("paidDate", paidDate).put("paidPrice", paidPrice);
+				JSONObject item = new JSONObject().put("id", id).put("name", name).put("desc", desc).put("paidDate", paidDate).put("paidPrice", paidPrice).put("price", soldPrice);
 				print(save, item.toString());
+				JSONObject itemsFile = In.readItem(Core.itemsFile);
+				JSONArray items = itemsFile.getJSONArray("Items");
+				List<String> derps = new ArrayList<String>();
+				for(int i = 0; i < items.length(); i++){
+					derps.add(items.getString(i));
+				}
+				if(!derps.contains(id)){
+					appendItemsFile(id);
+				}
 				return true;
 			}catch(IOException e){
 				return false;
@@ -68,38 +111,6 @@ public class Out {
 		}catch(JSONException e){
 			e.printStackTrace();
 			return false;
-		}
-	}
-	
-	public static boolean appendItemsFile(String id){
-		if(!Core.itemsFile.exists()){
-			JSONArray items = new JSONArray().put(id);
-			JSONObject itemsFile = new JSONObject().put("Items", items);
-			try {
-				print(Core.itemsFile, itemsFile.toString());
-				return true;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
-			}
-		}else{
-			try {
-				JSONObject itemsFile = In.readItem(Core.itemsFile);
-				JSONArray items = itemsFile.getJSONArray("Items");
-				items.put(id);
-				itemsFile.put("Items", items);
-				print(Core.itemsFile, itemsFile.toString());
-				return true;
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
-			}
 		}
 	}
 	
