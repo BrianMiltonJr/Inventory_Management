@@ -4,7 +4,7 @@ import java.io.File;
 
 import javax.swing.SwingUtilities;
 
-import com.johnwillikers.gui.UserInterface;
+import com.johnwillikers.gui.ItemTableFrame;
 import com.johnwillikers.io.In;
 
 public class Core {
@@ -56,7 +56,7 @@ public class Core {
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
 			public void run(){
-				new UserInterface();
+				new ItemTableFrame();
 			}
 		});
 	}
