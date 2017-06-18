@@ -2,19 +2,27 @@ package com.johnwillikers.gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import com.johnwillikers.Core;
 import com.johnwillikers.gui.tables.ItemTable;
 
-@SuppressWarnings("serial")
 public class ItemTableFrame extends JFrame{
+
+	private static final long serialVersionUID = -3870038291107315483L;
 
 	public ItemTableFrame(){
 		
@@ -57,10 +65,33 @@ public class ItemTableFrame extends JFrame{
 		itemTable.setOpaque(true);
 		table.add(itemTable);
 		
+		//Setup Menu
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("File");
+		menuBar.add(menu);
+		JMenuItem menuItem = new JMenuItem("Create a new Item", KeyEvent.VK_F1);
+		menuItem.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Selected Create an item.");
+				SwingUtilities.invokeLater(new Runnable(){
+					@Override
+					public void run(){
+						new NewItemFrame();
+					}
+				});
+				
+			}
+			
+		});
+		menu.add(menuItem);
+		
 		//Setup Split pane 1
 		JSplitPane splitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, table, sellEditor);
 		
 		//Show SplitPane
+		setJMenuBar(menuBar);
 		setContentPane(splitPane1);
 		pack();
 		setTitle(Core.name);
