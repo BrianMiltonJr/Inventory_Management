@@ -48,11 +48,21 @@ public class ItemTable extends JPanel{
 			/*Iterate through every element and search for it's ID in the Items folder then load the information 
 			 *into an Object[] to be added to the TableModel
 			 */
+			//Object[] prices = {};
+			//int i = 0;
 			items.forEach(id -> {
 				String item = (String) id;
 				Object[] data = In.getItems(item);
+				//prices[i] = data[5];
+				//i++;
+				//prices[i] = data[6];
+				//i++;
 				tm.addRow(data);
 			});
+			
+			
+			//Object[] lastRowData = {"","","","", "", "",""};
+			//tm.addRow("");
 			
 			//Setup JTable
 			final JTable table = new JTable(tm);
