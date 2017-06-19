@@ -45,10 +45,10 @@ public class ItemTableFrame extends JFrame{
 		
 		//Initialize TextFields
 		JTextField idText = new JTextField(8);
-		JTextField buyerText = new JTextField(12);
+		JTextField buyerText = new JTextField(18);
 		JTextField sellDateText = new JTextField(7);
 		JTextField sellPriceText = new JTextField(7);
-		JTextField notesText = new JTextField(20);
+		JTextField notesText = new JTextField(30);
 		
 		//Initialize Buttons
 		JButton submitSold = new JButton("Sell");
@@ -66,6 +66,32 @@ public class ItemTableFrame extends JFrame{
 						public void run(){
 							new ItemTableFrame();
 							new SoldItemTableFrame();
+						}
+					});
+					frame.dispose();
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+		});
+		JButton delete = new JButton("Delete");
+		delete.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					JSONObject itemD = In.readItem(new File(Core.itemsDir + idText.getText() + ".json"));
+					Item item = new Item(itemD.getString("id"), itemD.getString("name"), itemD.getString("desc"), itemD.getString("paidDate"), itemD.getFloat("paidPrice"), itemD.getFloat("price"));
+					item.eraseItem();
+					SwingUtilities.invokeLater(new Runnable(){
+						@Override
+						public void run(){
+							new ItemTableFrame();
 						}
 					});
 					frame.dispose();
@@ -98,6 +124,7 @@ public class ItemTableFrame extends JFrame{
 		notesTextPanel.add(notesText);
 		
 		//Add Component panels to main panel
+		sellEditor.add(delete);
 		sellEditor.add(idPanel);
 		sellEditor.add(buyerPanel);
 		sellEditor.add(sellDatePanel);
@@ -127,18 +154,20 @@ public class ItemTableFrame extends JFrame{
 		});
 		menu.add(menuItem);
 		
+		int heightSize = 600;
+		int screenWidth = (int) MainFrame.screenSize.getWidth()/2;
+		int screenHeight = (int) MainFrame.screenSize.getHeight()/2;
+		
 		//Setup Split pane 1
 		JSplitPane splitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, table, sellEditor);
-		
+		splitPane1.setDividerLocation((int) ((float) heightSize/1.33));
+
 		//Show SplitPane
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setJMenuBar(menuBar);
 		setContentPane(splitPane1);
 		pack();
 		setTitle(Core.name + " | UnSold Items");
-		int heightSize = 600;
-		int screenWidth = (int) MainFrame.screenSize.getWidth()/2;
-		int screenHeight = (int) MainFrame.screenSize.getHeight()/2;
 		setLocation(0, screenHeight - (heightSize/2));
 		setSize(screenWidth, heightSize);
 		setVisible(true);

@@ -77,18 +77,19 @@ public class SoldItemTableFrame extends JFrame{
 		itemTable.setOpaque(true);
 		table.add(itemTable);
 
+		int heightSize = 600;
+		int screenWidth = (int) MainFrame.screenSize.getWidth()/2;
+		int screenHeight = (int) MainFrame.screenSize.getHeight()/2;
 		
 		//Setup Split pane 1
 		JSplitPane splitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, table, tableEditor);
+		splitPane1.setDividerLocation((int) ((float) heightSize/1.19));
 		
 		//Show SplitPane
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setContentPane(splitPane1);
 		pack();
 		setTitle(Core.name + " | Sold Items");
-		int heightSize = 600;
-		int screenWidth = (int) MainFrame.screenSize.getWidth()/2;
-		int screenHeight = (int) MainFrame.screenSize.getHeight()/2;
 		setLocation(screenWidth, screenHeight - (heightSize/2));
 		setSize(screenWidth, heightSize);
 		setVisible(true);
