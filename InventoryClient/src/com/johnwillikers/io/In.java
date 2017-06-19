@@ -20,6 +20,25 @@ public class In {
 		return item;
 	}
 	
+	public static Object[] getSoldItems(String item){
+		Object[] fail = {null};
+		try {
+			JSONObject itemDetailsRaw = In.readItem(new File(Core.soldItemsDir + item + ".json"));
+			Object [] itemDetails = {itemDetailsRaw.get("id"), itemDetailsRaw.get("name"), itemDetailsRaw.get("notes"),
+					itemDetailsRaw.get("paidDate"), itemDetailsRaw.get("desc"), itemDetailsRaw.get("soldDate"),
+					itemDetailsRaw.getString("buyerName"), itemDetailsRaw.getInt("paidPrice") ,itemDetailsRaw.getInt("soldPrice"), itemDetailsRaw.getInt("soldPrice") - itemDetailsRaw.getInt("paidPrice")};
+			return itemDetails;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return fail;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return fail;
+		}
+	}
+	
 	public static Object[] getItems(String item){
 		Object[] fail = {null};
 		try {
