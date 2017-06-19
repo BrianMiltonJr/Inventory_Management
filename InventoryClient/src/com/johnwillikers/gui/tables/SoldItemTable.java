@@ -80,13 +80,13 @@ public class SoldItemTable extends JPanel{
 						int row = e.getFirstRow();
 						String id = tm.getValueAt(row, 0).toString();
 						String name = tm.getValueAt(row, 1).toString();
-						int paidPrice = Integer.parseInt(tm.getValueAt(row, 2).toString());
+						float paidPrice = Float.valueOf(tm.getValueAt(row, 2).toString());
 						String paidDate = tm.getValueAt(row, 3).toString();
 						String desc = tm.getValueAt(row, 4).toString();
 						String soldDate = tm.getValueAt(row, 5).toString();
 						String buyerName = tm.getValueAt(row, 6).toString();
 						String notes = tm.getValueAt(row, 7).toString();
-						int soldPrice = Integer.parseInt(tm.getValueAt(row, 8).toString());
+						float soldPrice = Float.valueOf(tm.getValueAt(row, 8).toString());
 						
 						SoldItem soldItem = new SoldItem(id, name, desc, paidDate, soldDate, paidPrice, soldPrice, buyerName, notes);
 						soldItem.saveItem();

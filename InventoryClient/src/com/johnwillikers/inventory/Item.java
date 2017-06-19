@@ -19,10 +19,10 @@ public class Item {
 	public String name;
 	public String desc;
 	public String paidDate;
-	public int paidPrice;
-	public int price;
+	public float paidPrice;
+	public float price;
 	
-	public Item(String id, String name, String desc, String paidDate ,int paidPrice, int price){
+	public Item(String id, String name, String desc, String paidDate ,float paidPrice, float price){
 		this.id = id;
 		this.name = name;
 		this.desc = desc;
@@ -47,7 +47,7 @@ public class Item {
 		return this.paidDate;
 	}
 	
-	public int getPaid(){
+	public float getPaid(){
 		return this.paidPrice;
 	}
 	
@@ -82,7 +82,7 @@ public class Item {
 		}
 	}
 	
-	public void sellItem(String buyerName, String soldDate, int soldPrice, String notes){
+	public void sellItem(String buyerName, String soldDate, float soldPrice, String notes){
 		SoldItem item = new SoldItem(this.id, this.name, this.desc, this.paidDate, soldDate, this.paidPrice, soldPrice, buyerName, notes);
 		item.saveItem();
 		this.eraseItem();

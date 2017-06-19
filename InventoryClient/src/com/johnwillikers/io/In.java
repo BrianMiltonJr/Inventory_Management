@@ -26,7 +26,8 @@ public class In {
 			JSONObject itemDetailsRaw = In.readItem(new File(Core.soldItemsDir + item + ".json"));
 			Object [] itemDetails = {itemDetailsRaw.get("id"), itemDetailsRaw.get("name"), itemDetailsRaw.get("notes"),
 					itemDetailsRaw.get("paidDate"), itemDetailsRaw.get("desc"), itemDetailsRaw.get("soldDate"),
-					itemDetailsRaw.getString("buyerName"), itemDetailsRaw.getInt("paidPrice") ,itemDetailsRaw.getInt("soldPrice"), itemDetailsRaw.getInt("soldPrice") - itemDetailsRaw.getInt("paidPrice")};
+					itemDetailsRaw.getString("buyerName"), itemDetailsRaw.getFloat("paidPrice") ,itemDetailsRaw.getFloat("soldPrice"),
+					itemDetailsRaw.getFloat("soldPrice") - itemDetailsRaw.getFloat("paidPrice")};
 			return itemDetails;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -45,7 +46,7 @@ public class In {
 			JSONObject itemDetailsRaw = In.readItem(new File(Core.itemsDir + item + ".json"));
 			Object [] itemDetails = {itemDetailsRaw.get("id"), itemDetailsRaw.get("name"), itemDetailsRaw.get("paidPrice"),
 					itemDetailsRaw.get("paidDate"), itemDetailsRaw.get("desc"), itemDetailsRaw.get("price"),
-					itemDetailsRaw.getInt("price") - itemDetailsRaw.getInt("paidPrice")};
+					itemDetailsRaw.getFloat("price") - itemDetailsRaw.getFloat("paidPrice")};
 			return itemDetails;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

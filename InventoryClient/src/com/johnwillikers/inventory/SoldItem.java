@@ -22,10 +22,10 @@ public class SoldItem {
 	public String soldDate;
 	public String buyerName;
 	public String notes;
-	public int paidPrice;
-	public int soldPrice;
+	public float paidPrice;
+	public float soldPrice;
 	
-	public SoldItem(String id, String name, String desc, String paidDate, String soldDate, int paidPrice, int soldPrice, String buyerName, String notes){
+	public SoldItem(String id, String name, String desc, String paidDate, String soldDate, float paidPrice, float soldPrice, String buyerName, String notes){
 		this.id = id;
 		this.name = name;
 		this.desc = desc;
@@ -57,15 +57,15 @@ public class SoldItem {
 		return this.soldDate;
 	}
 	
-	public int getPaid(){
+	public float getPaid(){
 		return this.paidPrice;
 	}
 	
-	public int getSold(){
+	public float getSold(){
 		return this.soldPrice;
 	}
 	
-	public int getProfit(){
+	public float getProfit(){
 		return this.soldPrice - this.paidPrice; 
 	}
 	

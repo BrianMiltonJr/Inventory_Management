@@ -86,7 +86,11 @@ public class SoldItemTableFrame extends JFrame{
 		setContentPane(splitPane1);
 		pack();
 		setTitle(Core.name + " | Sold Items");
-		setSize(800, 600);
+		int heightSize = 600;
+		int screenWidth = (int) MainFrame.screenSize.getWidth()/2;
+		int screenHeight = (int) MainFrame.screenSize.getHeight()/2;
+		setLocation(screenWidth, screenHeight - (heightSize/2));
+		setSize(screenWidth, heightSize);
 		setVisible(true);
 	}
 

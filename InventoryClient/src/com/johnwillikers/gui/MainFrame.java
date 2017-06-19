@@ -1,6 +1,8 @@
 package com.johnwillikers.gui;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,7 +16,10 @@ import com.johnwillikers.Core;
 public class MainFrame extends JFrame{
 
 	private static final long serialVersionUID = -3101382095506189484L;
-
+	public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	public static double width = screenSize.getWidth();
+	public static double height = screenSize.getHeight();
+	
 	public MainFrame(){
 		
 		JButton openItemTable = new JButton("Open UnSold Items Table.");
@@ -55,7 +60,12 @@ public class MainFrame extends JFrame{
 		setContentPane(panel);
 		pack();
 		setTitle(Core.name);
-		setSize(500, 75);
+		int widthSize = 500;
+		int heightSize = 75;
+		int middleWidth = (int) (width/2);
+		int middleHeight = (int) (height/2);
+		setLocation(middleWidth - (widthSize/2), middleHeight - (heightSize/2));
+		setSize(widthSize, heightSize);
 		setVisible(true);
 	}
 	

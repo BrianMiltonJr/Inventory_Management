@@ -93,7 +93,7 @@ public class Out {
 	 * if it is it will save the information as an Item and anything else as a SoldItem. I.e use Core.saveItemCode if you
 	 * intend to save an Item and not a SoldItem. - John <3
 	 */
-	public static boolean saveItem(String id, String name, String desc, String paidDate, String soldDate, int paidPrice, int soldPrice, String buyerName, String notes){
+	public static boolean saveItem(String id, String name, String desc, String paidDate, String soldDate, float paidPrice, float soldPrice, String buyerName, String notes){
 		//Saving Item
 		if(soldPrice == 20000000 || soldDate == "00/00/0000" || notes == "HERPDERP" || buyerName == "DERPHERP"){
 			File save = new File(Core.itemsDir.toString() + "/" + id + ".json");

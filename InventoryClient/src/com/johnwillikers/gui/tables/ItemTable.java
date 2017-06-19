@@ -77,10 +77,10 @@ public class ItemTable extends JPanel{
 						int row = e.getFirstRow();
 						String id = tm.getValueAt(row, 0).toString();
 						String name = tm.getValueAt(row, 1).toString();
-						int paid = Integer.parseInt(tm.getValueAt(row, 2).toString());
+						float paid = Float.valueOf(tm.getValueAt(row, 2).toString());
 						String date = tm.getValueAt(row, 3).toString();
 						String desc = tm.getValueAt(row, 4).toString();
-						int price = Integer.parseInt(tm.getValueAt(row, 5).toString());
+						float price = Float.valueOf(tm.getValueAt(row, 5).toString());
 						Item item = new Item(id, name, desc, date, paid, price);
 						item.saveItem();
 						Object aValue = price - paid;

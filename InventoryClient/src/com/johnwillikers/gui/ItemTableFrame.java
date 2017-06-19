@@ -59,12 +59,13 @@ public class ItemTableFrame extends JFrame{
 				try {
 					JSONObject itemDetails = In.readItem(new File(Core.itemsDir + idText.getText() + ".json"));
 					Item item = new Item(idText.getText(), itemDetails.getString("name"), itemDetails.getString("desc"),
-										 itemDetails.getString("paidDate") ,itemDetails.getInt("paidPrice"), itemDetails.getInt("price"));
-					item.sellItem(buyerText.getText(), sellDateText.getText(), Integer.parseInt(sellPriceText.getText()), notesText.getText());
+										 itemDetails.getString("paidDate") ,itemDetails.getFloat("paidPrice"), itemDetails.getFloat("price"));
+					item.sellItem(buyerText.getText(), sellDateText.getText(), Float.valueOf(sellPriceText.getText()), notesText.getText());
 					SwingUtilities.invokeLater(new Runnable(){
 						@Override
 						public void run(){
 							new ItemTableFrame();
+							new SoldItemTableFrame();
 						}
 					});
 					frame.dispose();
@@ -135,7 +136,11 @@ public class ItemTableFrame extends JFrame{
 		setContentPane(splitPane1);
 		pack();
 		setTitle(Core.name + " | UnSold Items");
-		setSize(800, 600);
+		int heightSize = 600;
+		int screenWidth = (int) MainFrame.screenSize.getWidth()/2;
+		int screenHeight = (int) MainFrame.screenSize.getHeight()/2;
+		setLocation(0, screenHeight - (heightSize/2));
+		setSize(screenWidth, heightSize);
 		setVisible(true);
 	}
 
