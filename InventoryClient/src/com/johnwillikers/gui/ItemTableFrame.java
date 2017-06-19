@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,8 +19,13 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.johnwillikers.Core;
 import com.johnwillikers.gui.tables.ItemTable;
+import com.johnwillikers.inventory.Item;
+import com.johnwillikers.io.In;
 
 public class ItemTableFrame extends JFrame{
 
@@ -30,6 +37,7 @@ public class ItemTableFrame extends JFrame{
 		JPanel sellEditor = new JPanel(new FlowLayout());
 		
 		//Initialize TextFields
+		JTextField idText = new JTextField(8);
 		JTextField buyerText = new JTextField(12);
 		JTextField sellDateText = new JTextField(7);
 		JTextField sellPriceText = new JTextField(7);
@@ -37,8 +45,30 @@ public class ItemTableFrame extends JFrame{
 		
 		//Initialize Buttons
 		JButton submitSold = new JButton("Sell");
+		submitSold.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					JSONObject itemDetails = In.readItem(new File(Core.itemsDir + idText.getText() + ".json"));
+					Item item = new Item(idText.getText(), itemDetails.getString("name"), itemDetails.getString("desc"),
+										 itemDetails.getString("paidDate") ,itemDetails.getInt("paidPrice"), itemDetails.getInt("price"));
+					item.sellItem(buyerText.getText(), sellDateText.getText(), Integer.parseInt(sellPriceText.getText()), notesText.getText());
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+		});
 		
 		//Setup Component panels
+		JPanel idPanel = new JPanel(new FlowLayout());
+		idPanel.add(new JLabel("Id:"));
+		idPanel.add(idText);
 		JPanel buyerPanel = new JPanel(new FlowLayout());
 		buyerPanel.add(new JLabel("Buyer's Name"));
 		buyerPanel.add(buyerText);
@@ -53,6 +83,7 @@ public class ItemTableFrame extends JFrame{
 		notesTextPanel.add(notesText);
 		
 		//Add Component panels to main panel
+		sellEditor.add(idPanel);
 		sellEditor.add(buyerPanel);
 		sellEditor.add(sellDatePanel);
 		sellEditor.add(sellPricePanel);
@@ -91,6 +122,7 @@ public class ItemTableFrame extends JFrame{
 		JSplitPane splitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, table, sellEditor);
 		
 		//Show SplitPane
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setJMenuBar(menuBar);
 		setContentPane(splitPane1);
 		pack();
