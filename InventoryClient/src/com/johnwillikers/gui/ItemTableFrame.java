@@ -30,8 +30,15 @@ import com.johnwillikers.io.In;
 public class ItemTableFrame extends JFrame{
 
 	private static final long serialVersionUID = -3870038291107315483L;
-
+	ItemTableFrame frame = this;
+	
 	public ItemTableFrame(){
+		
+		//Setup Items Table Pane
+		JPanel table = new JPanel(new BorderLayout());
+		ItemTable itemTable = new ItemTable();
+		itemTable.setOpaque(true);
+		table.add(itemTable);				
 		
 		//Setup Sell editor
 		JPanel sellEditor = new JPanel(new FlowLayout());
@@ -54,6 +61,13 @@ public class ItemTableFrame extends JFrame{
 					Item item = new Item(idText.getText(), itemDetails.getString("name"), itemDetails.getString("desc"),
 										 itemDetails.getString("paidDate") ,itemDetails.getInt("paidPrice"), itemDetails.getInt("price"));
 					item.sellItem(buyerText.getText(), sellDateText.getText(), Integer.parseInt(sellPriceText.getText()), notesText.getText());
+					SwingUtilities.invokeLater(new Runnable(){
+						@Override
+						public void run(){
+							new ItemTableFrame();
+						}
+					});
+					frame.dispose();
 				} catch (JSONException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -89,13 +103,7 @@ public class ItemTableFrame extends JFrame{
 		sellEditor.add(sellPricePanel);
 		sellEditor.add(notesTextPanel);
 		sellEditor.add(submitSold);
-		
-		//Setup Items Table Pane
-		JPanel table = new JPanel(new BorderLayout());
-		ItemTable itemTable = new ItemTable();
-		itemTable.setOpaque(true);
-		table.add(itemTable);
-		
+
 		//Setup Menu
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("File");
@@ -109,7 +117,7 @@ public class ItemTableFrame extends JFrame{
 				SwingUtilities.invokeLater(new Runnable(){
 					@Override
 					public void run(){
-						new NewItemFrame();
+						new NewItemFrame(frame);
 					}
 				});
 				
@@ -122,11 +130,11 @@ public class ItemTableFrame extends JFrame{
 		JSplitPane splitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, table, sellEditor);
 		
 		//Show SplitPane
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setJMenuBar(menuBar);
 		setContentPane(splitPane1);
 		pack();
-		setTitle(Core.name);
+		setTitle(Core.name + " | UnSold Items");
 		setSize(800, 600);
 		setVisible(true);
 	}

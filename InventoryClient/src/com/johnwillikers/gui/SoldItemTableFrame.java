@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +26,8 @@ import com.johnwillikers.io.In;
 public class SoldItemTableFrame extends JFrame{
 
 	private static final long serialVersionUID = -3937870382110731483L;
-
+	SoldItemTableFrame frame = this;
+	
 	public SoldItemTableFrame(){
 		
 		//Setup table editor
@@ -46,6 +48,13 @@ public class SoldItemTableFrame extends JFrame{
 							itemD.getString("soldDate"), itemD.getInt("paidPrice"), itemD.getInt("soldPrice"), itemD.getString("buyerName"),
 							itemD.getString("notes"));
 					item.eraseItem();
+					SwingUtilities.invokeLater(new Runnable(){
+						@Override
+						public void run(){
+							new SoldItemTableFrame();
+						}
+					});
+					frame.dispose();
 				} catch (JSONException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -73,10 +82,10 @@ public class SoldItemTableFrame extends JFrame{
 		JSplitPane splitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, table, tableEditor);
 		
 		//Show SplitPane
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setContentPane(splitPane1);
 		pack();
-		setTitle(Core.name);
+		setTitle(Core.name + " | Sold Items");
 		setSize(800, 600);
 		setVisible(true);
 	}

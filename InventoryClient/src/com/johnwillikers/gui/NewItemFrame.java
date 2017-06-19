@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import com.johnwillikers.inventory.Item;
 
@@ -17,7 +18,9 @@ public class NewItemFrame extends JFrame{
 	private static final long serialVersionUID = 4340362860056121655L;
 	//private TableModel tm;
 	
-	public NewItemFrame(){
+	NewItemFrame frame0 = this;
+	
+	public NewItemFrame(ItemTableFrame frame){
 		
 		//this.tm = tm;
 		
@@ -45,8 +48,15 @@ public class NewItemFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				Item item = new Item(idText.getText(), nameText.getText(), descText.getText(), dateText.getText(), Integer.valueOf(paidText.getText()), Integer.valueOf(priceText.getText()));
 				item.saveItem();
-				setVisible(false);
-				//TODO update Table
+				frame0.dispose();
+				
+				SwingUtilities.invokeLater(new Runnable(){
+					@Override
+					public void run(){
+						new ItemTableFrame();
+					}
+				});
+				frame.dispose();
 			}
 			
 		});
