@@ -4,8 +4,7 @@ import java.io.File;
 
 import javax.swing.SwingUtilities;
 
-import com.johnwillikers.gui.ItemTableFrame;
-import com.johnwillikers.gui.SoldItemTableFrame;
+import com.johnwillikers.gui.MainFrame;
 import com.johnwillikers.io.In;
 
 public class Core {
@@ -54,17 +53,12 @@ public class Core {
 	public static void main(String[] args){
 		firstLaunch();
 		In.setSettings();
-		SwingUtilities.invokeLater(new Runnable(){
-			@Override
-			public void run(){
-				new ItemTableFrame();
-			}
-		});
+		
 		
 		SwingUtilities.invokeLater(new Runnable(){
 			@Override
 			public void run(){
-				new SoldItemTableFrame();
+				new MainFrame();
 			}
 		});
 	}
