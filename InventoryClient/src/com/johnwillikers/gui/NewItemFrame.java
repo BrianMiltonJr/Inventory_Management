@@ -14,7 +14,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import com.johnwillikers.inventory.Item;
+import com.johnwillikers.mysql.DbCon;
 
 public class NewItemFrame extends JFrame{
 
@@ -51,8 +51,9 @@ public class NewItemFrame extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Item item = new Item(idText.getText(), nameText.getText(), descText.getText(), dateText.getText(), Float.valueOf(paidText.getText()), Integer.valueOf(priceText.getText()));
-				item.saveItem();
+				DbCon connection = new DbCon("test", "items", "localhost", "root", "lonely4life99");
+				connection.createItem(idText.getText().toString(), nameText.getText().toString(), Float.valueOf(paidText.getText().toString()),
+						dateText.getText().toString(), descText.getText().toString(), Float.valueOf(priceText.getText().toString()));
 				frame0.dispose();
 					
 				SwingUtilities.invokeLater(new Runnable(){

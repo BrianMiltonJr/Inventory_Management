@@ -2,7 +2,7 @@ package com.johnwillikers.gui.tables;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -11,13 +11,9 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import com.johnwillikers.Core;
-import com.johnwillikers.inventory.SoldItem;
-import com.johnwillikers.io.In;
+import com.johnwillikers.mysql.DbCon;
 
 @SuppressWarnings("serial")
 public class SoldItemTable extends JPanel{
@@ -30,9 +26,9 @@ public class SoldItemTable extends JPanel{
 		String[] columnNames = {"Id", "Name", "Notes", "Date", "Description", "Sold Date", "Buyer Name", "Paid", "Sold", "Profit"};
 		
 		try {
-			//Load the Items_Registry.jon then get the Items array out
-			JSONObject itemsFile = In.readItem(Core.soldItemsFile);
-			JSONArray items = itemsFile.getJSONArray("Items");
+			//Load sol_items table to List<String>
+			DbCon connection = new DbCon("test", "sold_items", "localhost", "root", "lonely4life99");
+			List<Object> items = connection.retrieveSoldItems();
 			
 			//TODO setup a process that dynamically adds columns.
 			//Set up Table Model Columns
@@ -48,24 +44,19 @@ public class SoldItemTable extends JPanel{
 			tm.addColumn(columnNames[8]);
 			tm.addColumn(columnNames[9]);
 			
-			/*Iterate through every element and search for it's ID in the Items folder then load the information 
-			 *into an Object[] to be added to the TableModel
+			/*
+			 * Add all the Items from the list into the table rows
 			 */
-			//Object[] prices = {};
-			//int i = 0;
-			items.forEach(id -> {
-				String item = (String) id;
-				Object[] data = In.getSoldItems(item);
-				//prices[i] = data[5];
-				//i++;
-				//prices[i] = data[6];
-				//i++;
-				tm.addRow(data);
-			});
-			
-			
-			//Object[] lastRowData = {"","","","", "", "",""};
-			//tm.addRow("");
+			int index = 0;
+			System.out.println(items.toString());
+			System.out.println(items.size());
+			while(index < items.size()){
+				Object[] derp = {items.get(index + 0), items.get(index + 1), items.get(index + 8), items.get(index + 3), items.get(index + 4),
+						items.get(index + 7), items.get(index + 6), items.get(index + 2), items.get(index + 5),
+						(float) items.get(index + 5) -  (float) items.get(index + 2)};
+				index = index + 9;
+				tm.addRow(derp);
+			}
 			
 			//Setup JTable
 			final JTable table = new JTable(tm);
@@ -87,9 +78,8 @@ public class SoldItemTable extends JPanel{
 						String buyerName = tm.getValueAt(row, 6).toString();
 						String notes = tm.getValueAt(row, 7).toString();
 						float soldPrice = Float.valueOf(tm.getValueAt(row, 8).toString());
-						
-						SoldItem soldItem = new SoldItem(id, name, desc, paidDate, soldDate, paidPrice, soldPrice, buyerName, notes);
-						soldItem.saveItem();
+						DbCon connection = new DbCon("test", "sold_items", "localhost", "root", "lonely4life99");
+						connection.updateSoldItem(id, name, paidPrice, paidDate, desc, soldPrice, buyerName, soldDate, notes);
 						Object aValue = soldPrice - paidPrice;
 						tm.setValueAt(aValue, row, 9);
 					}
@@ -103,9 +93,6 @@ public class SoldItemTable extends JPanel{
 			JScrollPane scrollPane = new JScrollPane(table);
 			add(scrollPane);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

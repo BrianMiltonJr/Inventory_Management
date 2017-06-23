@@ -5,8 +5,6 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,12 +18,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.johnwillikers.Core;
 import com.johnwillikers.gui.tables.ItemTable;
-import com.johnwillikers.inventory.Item;
-import com.johnwillikers.io.In;
+import com.johnwillikers.mysql.DbCon;
 
 public class ItemTableFrame extends JFrame{
 
@@ -56,26 +52,21 @@ public class ItemTableFrame extends JFrame{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					JSONObject itemDetails = In.readItem(new File(Core.itemsDir + idText.getText() + ".json"));
-					Item item = new Item(idText.getText(), itemDetails.getString("name"), itemDetails.getString("desc"),
-										 itemDetails.getString("paidDate") ,itemDetails.getFloat("paidPrice"), itemDetails.getFloat("price"));
-					item.sellItem(buyerText.getText(), sellDateText.getText(), Float.valueOf(sellPriceText.getText()), notesText.getText());
-					SwingUtilities.invokeLater(new Runnable(){
-						@Override
-						public void run(){
-							new ItemTableFrame();
-							new SoldItemTableFrame();
-						}
-					});
-					frame.dispose();
-				} catch (JSONException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				DbCon connection = new DbCon("test", "sold_items", "localhost", "root", "lonely4life99");
+				String[] itemDetails = connection.getItem(idText.getText().toString());
+				//System.out.println(itemDetails.length);
+				connection.createSoldItem(itemDetails[0], itemDetails[1], Float.valueOf(itemDetails[2]), itemDetails[3], itemDetails[4],
+										Float.valueOf(sellPriceText.getText()), buyerText.getText().toString(), sellDateText.getText().toString(),
+											notesText.getText().toString());
+				connection.deleteItem(idText.getText(), "items");
+				SwingUtilities.invokeLater(new Runnable(){
+					@Override
+					public void run(){
+						new ItemTableFrame();
+						new SoldItemTableFrame();
+					}
+				});
+				frame.dispose();
 			}
 			
 		});
@@ -85,9 +76,8 @@ public class ItemTableFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					JSONObject itemD = In.readItem(new File(Core.itemsDir + idText.getText() + ".json"));
-					Item item = new Item(itemD.getString("id"), itemD.getString("name"), itemD.getString("desc"), itemD.getString("paidDate"), itemD.getFloat("paidPrice"), itemD.getFloat("price"));
-					item.eraseItem();
+					DbCon connection = new DbCon("test", "items", "localhost", "root", "lonely4life99");
+					connection.deleteItem(idText.getText().toString(), "items");
 					SwingUtilities.invokeLater(new Runnable(){
 						@Override
 						public void run(){
@@ -96,9 +86,6 @@ public class ItemTableFrame extends JFrame{
 					});
 					frame.dispose();
 				} catch (JSONException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}

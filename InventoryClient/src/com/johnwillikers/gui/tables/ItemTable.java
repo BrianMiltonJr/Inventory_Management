@@ -2,7 +2,7 @@ package com.johnwillikers.gui.tables;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -11,13 +11,9 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import com.johnwillikers.Core;
-import com.johnwillikers.inventory.Item;
-import com.johnwillikers.io.In;
+import com.johnwillikers.mysql.DbCon;
 
 @SuppressWarnings("serial")
 public class ItemTable extends JPanel{
@@ -30,9 +26,9 @@ public class ItemTable extends JPanel{
 		String[] columnNames = {"Id", "Name", "Paid", "Date", "Description", "Price", "Expected Profit"};
 		
 		try {
-			//Load the Items_Registry.jon then get the Items array out
-			JSONObject itemsFile = In.readItem(Core.itemsFile);
-			JSONArray items = itemsFile.getJSONArray("Items");
+			//Get the List<Object> from the Mysql DB
+			DbCon connection = new DbCon("test", "items", "localhost", "root", "lonely4life99");
+			List<Object> items = connection.retrieveItems();
 			
 			//TODO setup a process that dynamically adds columns.
 			//Set up Table Model Columns
@@ -45,24 +41,17 @@ public class ItemTable extends JPanel{
 			tm.addColumn(columnNames[5]);
 			tm.addColumn(columnNames[6]);
 			
-			/*Iterate through every element and search for it's ID in the Items folder then load the information 
-			 *into an Object[] to be added to the TableModel
+			/*
+			 * There are 6 elements per row. So this means I can pull the data out in pathes of six. You will see what i mean.
 			 */
-			//Object[] prices = {};
-			//int i = 0;
-			items.forEach(id -> {
-				String item = (String) id;
-				Object[] data = In.getItems(item);
-				//prices[i] = data[5];
-				//i++;
-				//prices[i] = data[6];
-				//i++;
-				tm.addRow(data);
-			});
-			
-			
-			//Object[] lastRowData = {"","","","", "", "",""};
-			//tm.addRow("");
+			int index = 0;
+			System.out.println(items.toString());
+			System.out.println(items.size());
+			while(index < items.size()){
+				Object[] derp = {items.get(index + 0), items.get(index + 1), items.get(index + 2), items.get(index + 3), items.get(index + 4), items.get(index + 5), (float) items.get(index + 5) -  (float) items.get(index + 2)};
+				index = index + 6;
+				tm.addRow(derp);
+			}
 			
 			//Setup JTable
 			final JTable table = new JTable(tm);
@@ -81,13 +70,13 @@ public class ItemTable extends JPanel{
 						String date = tm.getValueAt(row, 3).toString();
 						String desc = tm.getValueAt(row, 4).toString();
 						float price = Float.valueOf(tm.getValueAt(row, 5).toString());
-						Item item = new Item(id, name, desc, date, paid, price);
-						item.saveItem();
+						DbCon connection = new DbCon("test", "items", "localhost", "root", "lonely4life99");
+						connection.updateItem(id, name, paid, date, desc, price);
 						Object aValue = price - paid;
 						tm.setValueAt(aValue, row, 6);
 					}
 				}
-				
+
 			});
 			//table.setEnabled(false);
 			table.setRowHeight(30);
@@ -96,9 +85,6 @@ public class ItemTable extends JPanel{
 			JScrollPane scrollPane = new JScrollPane(table);
 			add(scrollPane);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

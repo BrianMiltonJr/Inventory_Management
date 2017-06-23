@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,12 +14,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.johnwillikers.Core;
 import com.johnwillikers.gui.tables.SoldItemTable;
-import com.johnwillikers.inventory.SoldItem;
-import com.johnwillikers.io.In;
+import com.johnwillikers.mysql.DbCon;
 
 public class SoldItemTableFrame extends JFrame{
 
@@ -43,11 +39,8 @@ public class SoldItemTableFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					JSONObject itemD = In.readItem(new File(Core.soldItemsDir + idText.getText() + ".json"));
-					SoldItem item = new SoldItem(itemD.getString("id"), itemD.getString("name"), itemD.getString("desc"), itemD.getString("paidDate"),
-							itemD.getString("soldDate"), itemD.getInt("paidPrice"), itemD.getInt("soldPrice"), itemD.getString("buyerName"),
-							itemD.getString("notes"));
-					item.eraseItem();
+					DbCon connection = new DbCon("test", "sold_items", "localhost", "root", "lonely4life99");
+					connection.deleteItem(idText.getText(), "sold_items");
 					SwingUtilities.invokeLater(new Runnable(){
 						@Override
 						public void run(){
@@ -58,10 +51,21 @@ public class SoldItemTableFrame extends JFrame{
 				} catch (JSONException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
 				}
+			}
+			
+		});
+		JButton getReceipt = new JButton("Get Receipt");
+		getReceipt.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable(){
+					@Override
+					public void run(){
+						new GetReceiptFrame(idText.getText());
+					}
+				});
 			}
 			
 		});
@@ -70,6 +74,7 @@ public class SoldItemTableFrame extends JFrame{
 		tableEditor.add(new JLabel("Id"));
 		tableEditor.add(idText);
 		tableEditor.add(delete);
+		tableEditor.add(getReceipt);
 		
 		//Setup Items Table Pane
 		JPanel table = new JPanel(new BorderLayout());
